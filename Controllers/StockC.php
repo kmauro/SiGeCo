@@ -8,7 +8,7 @@ class StockController{
     public function showStockC(){
 
         $dbTable = "products";
-        if(isset($_GET["id"])){
+        if(!empty($_GET["id"])){
             $dataID = $_GET["id"]; //Si se cumple es porque estoy filtrando por subcategory.
         }else{
             $dataID = 0; 
@@ -39,12 +39,12 @@ class StockController{
 
     public function addProductC(){
         $dbTable = "products";
-        if (empty($_POST['name']) || empty($_POST['subcategory']) || empty($_POST['price']) || empty($_POST['quantity']) || empty($_POST['d_quantity']) || empty($_POST['supplier'])) {
+        if (empty($_POST['name']) || empty($_POST['subcategory']) || empty($_POST['cost']) || empty($_POST['price']) || empty($_POST['quantity']) || empty($_POST['d_quantity']) || empty($_POST['suppliers'])) {
             die("Todos los campos son obligatorios");
         }else{
-            $regData = array("name"=>$_POST['name'], "subcategory_id"=>$_POST['subcategory'], "price"=>$_POST['price'], "quantity"=>$_POST['quantity'], "d_quantity"=>$_POST['d_quantity'], "supplier"=>$_POST['supplier']);
-            
-            $answer = StockModel::addProductM($dbTable, $regData);
+            $regData = array("name"=>$_POST['name'], "subcategory_id"=>$_POST['subcategory'], "cost"=>$_POST['cost'], "price"=>$_POST['price'], "quantity"=>$_POST['quantity'], "d_quantity"=>$_POST['d_quantity']);
+            $suppliers = $_POST['suppliers'];
+            $answer = StockModel::addProductM($dbTable, $regData, $suppliers);
 
             if($answer == 1){
                 header("location:index.php?route=stock");

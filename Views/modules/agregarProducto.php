@@ -6,7 +6,7 @@
             <form class="row g-3" method="POST" id="productoForm">
                 <div class="col-12">
                     <label for="name" class="form-label">Nombre Producto</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Nombre del producto">
+                    <input type="text" class="form-control" id="name" name="name" autocomplete=off placeholder="Nombre del producto">
                 </div>
 
                 <div class="col-md-6">
@@ -19,7 +19,12 @@
                     <select id="subcategory" name="subcategory" class="form-select"></select>
                 </div>
 
-                <div class="col-12">
+                <div class="col-md-6">
+                    <label for="cost" class="form-label">Costo</label>
+                    <input type="number" class="form-control" id="cost" name="cost" placeholder="99999">
+                </div>
+
+                <div class="col-md-6">
                     <label for="price" class="form-label">Precio</label>
                     <input type="number" class="form-control" id="price" name="price" placeholder="99999">
                 </div>
@@ -35,8 +40,9 @@
                 </div>
 
                 <div class="col-12">
-                    <label for="suppliers" class="form-label">Proveedor</label>
-                    <select id="suppliers" name="suppliers" class="form-select"></select>
+                    <label for="suppliers" class="form-label">Proveedores:</label>
+                    <div id="suppliers" name="suppliers" class="product-list">
+                    </div>
                 </div>
 
                 <div class="col-12">
@@ -50,26 +56,13 @@
 
 
     <script src="Views/assets/js/get_data.js"> </script>
-    <script> 
-        document.getElementById("productoForm").addEventListener("submit", function(e) {
-        e.preventDefault();
 
-        let formData = new FormData(this);
-
-        fetch("Controllers/guardar_producto.php", {
-            method: "POST",
-            body: formData
-        })
-        
-        .catch(error => console.error("Error:", error));
-    });
- </script>
 
         
     <?php
     
-   // $controller = new StockController();
-   // $controller->agregarProductoC();
+        $controller = new StockController();
+        $controller->addProductC();
     
     ?>
 

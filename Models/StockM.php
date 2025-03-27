@@ -20,7 +20,7 @@ class StockModel{
         $pdo->close();
     }
 
-    public static function addProductM($dbTable, $regData){
+    public static function addProductM($dbTable, $regData, $suppliers){
         try {
 
 
@@ -28,19 +28,22 @@ class StockModel{
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
             // Insertar producto
-            $stmt = $pdo->prepare("INSERT INTO $dbTable (name, id_subcategory, price, quantity, desired_quantity) VALUES (?, ?, ?, ?, ?)");
-            $stmt->execute([$regData["name"], $regData["subcategory_id"], $regData["price"], $regData["quantity"], $regData["d_quantity"]]);
-    
+            $stmt = $pdo->prepare("INSERT INTO $dbTable (name, id_subcategory, cost, price, quantity, desired_quantity) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$regData["name"], $regData["subcategory_id"], $regData["cost"], $regData["price"], $regData["quantity"], $regData["d_quantity"]]);
+            echo "todo ok";
             $productId = $pdo->lastInsertId();
             //REFACTOR THIS
             //array de producto->proveedores
-            $stmt = $pdo->prepare("INSERT INTO supplier_product (id_supplier, id_product) VALUES (?, ?)");
-
-            foreach($answer as $key => $value /* por cada proveedor seleccionado */){
-                //$stmt += ($productId, $value['id']),
-            }
+            $query = "INSERT INTO supplier_product (id_supplier, id_product) VALUES ";
             
-            if($stmt->execute([$regData["supplier"], $productId])){
+
+            foreach($suppliers as $key => $value /* por cada proveedor seleccionado */){
+                $query = $query."($value, $productId),";
+            }
+            $query = substr($query,0,-1);
+            $query=$query.';';
+            $stmt = $pdo->prepare($query);
+            if($stmt->execute()){
                 return 1;
             }else{
                 return 0;
