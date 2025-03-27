@@ -34,9 +34,5 @@
 
 	<style>
 
-.table {
-    border-radius: 8px;
-    overflow: hidden; /* Evita que los bordes se corten */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-}
+		
 	</style>

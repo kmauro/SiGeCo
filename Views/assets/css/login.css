@@ -1,0 +1,51 @@
+.contenedor {
+    max-width: fit-content;
+    padding-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.formulario {
+    color: black;
+    font-family: Arial;
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    border: black solid 2px;
+}
+
+.submit{
+    font-family: "Arial Black";
+    color: black;
+    background-color: white;
+    border-radius: 10px;
+    border: black solid 2px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    transition: all 0.2s ease-in;
+}
+
+.submit:hover{
+    color:white;
+    background-color: black;
+    border-color: white;
+}
+
+.signup{
+    font-family: "Arial Black";
+    color: black;
+    background-color: white;
+    border-radius: 10px;
+    border: black solid 2px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    transition: all 0.2s ease-in;
+}
+
+.signup:hover{
+    color:white;
+    background-color: black;
+    border-color: white;
+}
