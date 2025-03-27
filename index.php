@@ -15,7 +15,7 @@ $route = new RouteController();
 
 session_start();
 
-if(!isset($_SESSION["logged"])){
+if(empty($_SESSION["logged"])){
 	$route->login();
 }else{
     $route->template();

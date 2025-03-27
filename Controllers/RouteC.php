@@ -12,7 +12,7 @@ class RouteController{
 
     public function routes(){
 
-        if(isset($_GET["route"])){
+        if(!empty($_GET["route"])){
             $routes = $_GET["route"];
         }else{
             $routes = "index";

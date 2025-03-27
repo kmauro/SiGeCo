@@ -3,13 +3,13 @@
 class AdminController{
 
     public function logInC(){
-        if(isset($_POST["userI"])){
+        if(!empty($_POST["userI"])){
             $dataC = array("user"=>$_POST["userI"], "pass"=>$_POST["passI"]);
 
             $dbTable = "users";
 
             $answer = AdminModel::logInM($dataC, $dbTable);
-            if(isset($answer["user"])){
+            if(!empty($answer["user"])){
                 if($answer["user"] == $_POST["userI"] && $answer["pass"] == $_POST["passI"] ){
 
                     session_start();

@@ -4,7 +4,7 @@ class SupplierController{
     public static function showSupplierC(){
         
         $dbTable="suppliers";
-        if(isset($_GET["id"])){
+        if(!empty($_GET["id"])){
             $dataID = $_GET["id"];
         }else{
             $dataID = 0;

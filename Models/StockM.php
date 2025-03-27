@@ -4,13 +4,13 @@ require_once "config.php";
 
 class StockModel{
 
-    public static function showStockM($dbTable, $dataID){
+    public static function showStockM($dbTable, $dataID = null){
         $sql = "SELECT products.id, products.name, categories.category, subcategories.subcategory, cost, price, quantity, desired_quantity FROM $dbTable INNER JOIN subcategories ON products.id_subcategory = subcategories.id INNER JOIN categories ON subcategories.id_Category = categories.id";
-        if($dataID != 0){
-            $sql = $sql + " WHERE products.id_subcategory = :subcategoryid;";
+        if(!empty($dataID)){
+            $sql = $sql . " WHERE products.id_subcategory = :subcategoryid;";
         }
         $pdo = Config::cnx()->prepare($sql);
-        if($dataID != 0){
+        if(!empty($dataID)){
             $pdo->bindParam(":subcategoryid", $dataID, PDO::PARAM_INT);
         }
         $pdo->execute();

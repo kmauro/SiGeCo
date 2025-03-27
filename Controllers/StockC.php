@@ -6,12 +6,10 @@ class StockController{
 
 
     public function showStockC(){
-
+        $dataID = null;
         $dbTable = "products";
         if(!empty($_GET["id"])){
             $dataID = $_GET["id"]; //Si se cumple es porque estoy filtrando por subcategory.
-        }else{
-            $dataID = 0; 
         }
         $answer = StockModel::showStockM($dbTable, $dataID);
 

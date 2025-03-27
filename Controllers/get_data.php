@@ -3,7 +3,7 @@ require_once '../config.php'; // Incluye la conexión a la base de datos
 
 header('Content-Type: application/json');
 
-if (isset($_GET['type'])) {
+if (!empty($_GET['type'])) {
     $type = $_GET['type'];
 
     try {
@@ -11,7 +11,7 @@ if (isset($_GET['type'])) {
             $stmt = "SELECT id, category as name FROM categories";
             $pdo = Config::cnx()->prepare($stmt);
             $pdo->execute();
-        } elseif ($type == 'subcategories' && isset($_GET['id_category'])) {
+        } elseif ($type == 'subcategories' && !empty($_GET['id_category'])) {
             $pdo = Config::cnx()->prepare("SELECT id, subcategory as name FROM subcategories WHERE subcategories.id_category = ?");
             $pdo->execute([$_GET['id_category']]);
         } elseif ($type == 'suppliers') {
