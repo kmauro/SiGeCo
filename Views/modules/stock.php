@@ -4,7 +4,7 @@
 <h1 class="col-2">Productos</h1>
 <?php
   if($_SESSION["access_level"] == 1){
-      echo '<a class = "col-1" href="index.php?route=agregarProducto"><button type="button" class="btn btn-primary">Agregar</button></a>';
+      echo '<a class = "col-1" href="index.php?route=product"><button type="button" class="btn btn-primary">Agregar</button></a>';
   }
 
 ?>

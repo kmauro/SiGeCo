@@ -27,7 +27,7 @@ class StockController{
                     <td>'.$value["quantity"].'/'.$value["desired_quantity"].'</td>
                     <td><a href="index.php?route=suppliers&id='.$value["id"].'"<button>Ver</button></a></td>';
                     if($_SESSION["access_level"] == 1){
-                        echo '<td><a href="index.php?route=suppliers&id='.$value["id"].'"<button>Editar</button></a></td>';
+                        echo '<td><a href="index.php?route=product&id='.$value["id"].'"<button>Editar</button></a></td>';
                     }
                     
                 echo '</tr>';

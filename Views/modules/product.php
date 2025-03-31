@@ -1,4 +1,14 @@
-<h1>Agregar Producto</h1>
+<?php
+    if(empty($_GET["id"])){
+        echo "<h1>Agregar Producto</h1>";
+    }else{
+        echo '<div class = "row">
+                <h1 class="col-3">Editar Producto</h1>
+                <a class = "col-1" href="index.php?route=product"><button type="button" class="btn btn-danger">Borrar</button></a>
+            </div>';
+    }
+?>
+    
 
 	<div class="row">
         <div class  = "col-1"></div>
@@ -46,7 +56,15 @@
                 </div>
 
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary">Agregar</button>
+                    <button type="submit" class="btn btn-primary">
+                        <?php 
+                            if(empty($_GET["id"])){
+                                echo "Agregar";
+                            }else{
+                                echo "Editar";
+                            }
+                        ?>
+                    </button>
                 </div>
             </form>
         </div>
