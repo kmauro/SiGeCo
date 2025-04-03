@@ -20,6 +20,25 @@ class SupplierModel{
 
         $pdo->close();
     }
+
+
+    static public function addSupplierM($dbTable, $regData){
+        $sql = "INSERT INTO $dbTable (name, cuit, phone_number, email, address) VALUES (:name, :cuit, :phone_number, :email, :address)";
+        $pdo = Config::cnx()->prepare($sql);
+        $pdo->bindParam(":name", $regData["name"], PDO::PARAM_STR);
+        $pdo->bindParam(":cuit", $regData["cuit"], PDO::PARAM_STR);
+        $pdo->bindParam(":phone_number", $regData["phone_number"], PDO::PARAM_STR);
+        $pdo->bindParam(":email", $regData["email"], PDO::PARAM_STR);
+        $pdo->bindParam(":address", $regData["address"], PDO::PARAM_STR);
+
+        if($pdo->execute()){
+            return "success";
+        }else{
+            return "error";
+        }
+
+        $pdo->close();
+    }
     
 }
 

@@ -2,7 +2,7 @@
 		<h1 class="col-2">Proveedores</h1>
 		<?php
 			if($_SESSION["access_level"] == 1 && empty($_GET["id"])){
-				echo '<a class = "col-1" href="index.php?route=agregarProducto"><button type="button" class="btn btn-primary">Agregar</button></a>';
+				echo '<a class = "col-1" href="index.php?route=supplier"><button type="button" class="btn btn-primary">Agregar</button></a>';
 			}
 		?>
 	</div>
