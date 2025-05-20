@@ -1,9 +1,18 @@
 <?php
     $isEditing = !empty($_GET["id"]);
     $controller = new StockController();
+
+    // Handle form submission BEFORE any output
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isEditing) {
+        $controller->editProductC($_GET["id"]);
+        exit; // Stop further output after redirect
+    }
+
     $productData = $isEditing ? $controller->showProductC($_GET["id"]) : null;
     $product = $productData["product"] ?? null;
-    $suppliers = $productData["suppliers"] ?? null;
+    $suppliersChecked = $productData["suppliers"] ?? null;
+    $sController = new SupplierController();
+    $suppliersList = $sController->showSupplierC();
 
     if ($isEditing && !$productData) {
         echo '<h1>Error: Producto no encontrado.</h1>';
@@ -61,18 +70,30 @@
             </div>
 
             <div class="col-12">
+                
+
+                
                 <label for="suppliers" class="form-label">Proveedores:</label>
                 <div id="suppliers" name="suppliers" class="product-list">
                     <div class="row">
                         <?php
-                        if ($isEditing) {
-                            foreach ($suppliers as $supplier) {
-                                echo '<div class="col-4"><input type="checkbox" name="suppliers[]" value="' . htmlspecialchars($supplier["id"]) . '" checked>' . htmlspecialchars($supplier["name"]) . '</div>';
+                        foreach($suppliersList as $supplier) {
+                            $checked = '';
+                            if ($isEditing) {
+                                foreach ($suppliersChecked as $supplierChecked) {
+                                    if ($supplier["id"] == $supplierChecked["id"]) {
+                                        $checked = 'checked';
+                                        break;
+                                    }
+                                }
                             }
+                            echo '<div class="col-4"><input type="checkbox" name="suppliers[]" value="' . htmlspecialchars($supplier["id"]) . '" ' . $checked . '>' . htmlspecialchars($supplier["name"]) . '</div>';
                         }
                         ?>
                     </div>
                 </div>
+
+
             </div>
 
             <div class="col-12">
@@ -82,12 +103,3 @@
     </div>
 </div>
 <?php echo !$isEditing ? '<script src="Views/assets/js/get_data.js"> </script>' : null; ?>
-<?php
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isEditing) {
-        $controller->addProductC();
-    }else{
-        if ($isEditing) {
-            $controller->editProductC($_GET["id"]);
-        }
-    }
-?>

@@ -45,6 +45,19 @@ class StockController{
         }
     }
 
+    public function showProductSuppliersC($dataID) {
+        $dbTable = "products";
+        $answer = StockModel::showProductSuppliersM($dbTable, $dataID);
+
+        if (!$answer) {
+            return null;
+        }else{
+            return $answer;
+        }
+
+    }
+
+
 
     public function addProductC(){
         $dbTable = "products";
@@ -63,17 +76,25 @@ class StockController{
         }
     }
 
-    public function editProductC($dataID){
+    public function editProductC($dataID) {
         $dbTable = "products";
-        if (empty($_POST['name']) || empty($_POST['subcategory']) || empty($_POST['cost']) || empty($_POST['price']) || empty($_POST['quantity']) || empty($_POST['d_quantity'])) {
+        if (empty($_POST['suppliers']) || empty($_POST['name']) || empty($_POST['subcategory']) || empty($_POST['cost']) || empty($_POST['price']) || empty($_POST['quantity']) || empty($_POST['d_quantity'])) {
             die("Todos los campos son obligatorios");
-        }else{
-            $regData = array("name"=>$_POST['name'], "subcategory_id"=>$_POST['subcategory'], "cost"=>$_POST['cost'], "price"=>$_POST['price'], "quantity"=>$_POST['quantity'], "d_quantity"=>$_POST['d_quantity']);
+        } else {
+            $regData = array(
+                "name" => $_POST['name'],
+                "subcategory_id" => $_POST['subcategory'],
+                "cost" => $_POST['cost'],
+                "price" => $_POST['price'],
+                "quantity" => $_POST['quantity'],
+                "d_quantity" => $_POST['d_quantity']
+            );
             $answer = StockModel::editProductM($dbTable, $regData, $dataID);
 
-            if($answer == 1){
-                header("location:index.php?route=stock");	
-            }else{
+            if ($answer == 1) {
+                header("Location: index.php?route=stock");
+                exit;
+            } else {
                 echo "error";
             }
         }
@@ -84,7 +105,7 @@ class StockController{
         $answer = StockModel::deleteProductM($dbTable, $dataID);
 
         if($answer == 1){
-            header("location:index.php?route=dashboard");
+            header("location:index.php?route=stock");
         }else{
             echo "error";
         }

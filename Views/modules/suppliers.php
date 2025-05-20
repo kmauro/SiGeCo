@@ -30,10 +30,34 @@
 			
 
 			<?php
-				$mostar = new SupplierController();
-				$mostar->showSupplierC();
+				
+				if(!empty($_GET["id"])){
+					$controller = new StockController();	
+					$answer = $controller->showProductSuppliersC($_GET["id"]);
+				}else{
+					$controller = new SupplierController();
+					$answer = $controller->showSupplierC();
+				}
+				
+
+				foreach($answer as $key => $value){
+					echo '<tr>
+							<td>'.$value["name"].'</td>
+							<td>'.$value["cuit"].'</td>
+							<td>'.$value["phone_number"].'</td>
+							<td>'.$value["email"].'</td>
+							<td>'.$value["address"].'</td>
+							<td><a href="index.php?route=supplier&id='.$value["id"].'"<button>Editar</button></a></td>
+							<td><a href="index.php?route=supplier&id='.$value["id"].'"<button>Borrar</button></a></td>
+							
+					</tr>';
+				}
 
 			?>
+
+
+
+
 		</tbody>
 
 	</table>

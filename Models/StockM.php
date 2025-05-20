@@ -39,6 +39,16 @@ class StockModel{
         $pdo->close();
     }
 
+    public static function showProductSuppliersM($dbTable, $dataID){
+        $sql = "SELECT suppliers.* FROM suppliers INNER JOIN supplier_product ON suppliers.id = supplier_product.id_supplier WHERE supplier_product.id_product = :id;";
+        $pdo = Config::cnx()->prepare($sql);
+        $pdo->bindParam(":id", $dataID, PDO::PARAM_INT);
+        $pdo->execute();
+        $suppliers = $pdo->fetchAll(PDO::FETCH_ASSOC);
+        return $suppliers;
+        $pdo->close();
+    }
+
 
 
     public static function addProductM($dbTable, $regData, $suppliers){
@@ -86,6 +96,9 @@ class StockModel{
             $stmt = $pdo->prepare("DELETE FROM supplier_product WHERE id_product = ?");
             $stmt->execute([$dataID]);
             // Insertar nuevos proveedores
+            if(empty($_POST['suppliers'])){
+                return 1;
+            }
             $query = "INSERT INTO supplier_product (id_supplier, id_product) VALUES ";
             //Recorro el array de proveedores y lo concateno a la query
             foreach($_POST['suppliers'] as $key => $value){

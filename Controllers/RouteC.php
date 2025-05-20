@@ -17,7 +17,6 @@ class RouteController{
         }else{
             $routes = "index";
         }
-
         $answer = Model::RouteModel($routes);
 
 

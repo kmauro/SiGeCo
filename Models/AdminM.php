@@ -2,20 +2,40 @@
 require_once "config.php";
 class AdminModel{
     static public function logInM($dataC, $dbTable){
+        $sql = "SELECT user, password AS contra, id_access_level FROM $dbTable WHERE user = :usuario";
+        $pdo = Config::cnx()->prepare($sql);
+        $pdo->bindParam(":usuario", $dataC["user"], PDO::PARAM_STR);
+        $pdo->execute();
+        $user = $pdo->fetch();
+        if(!empty($user)){
+            if(password_verify($dataC["pass"], $user["contra"])){
+                return $user;
+            }else{
+                return "error contraseña";
+            }
+        }else{
+            return "error usuario";
+        }
+        $pdo->close();
 
-        //$pdo = Config::cnx()->prepare("SELECT user, pass AS contra FROM $dbTable WHERE user = ?");
-        //$pdo->bindParam(":usuario", $datosC["usuario"], PDO::PARAM_STR);
-        //$pdo->execute($datosC);
-        //return $pdo->fetch();
-        //$pdo-> close();
-        $pdo = new PDO("mysql:host=localhost;dbname=sigeco", "root", "");
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt = $pdo->prepare("SELECT user, password AS pass, id_access_level FROM $dbTable WHERE user = :user");
-        $stmt->bindParam(":user", $dataC["user"], PDO::PARAM_STR);
-        $stmt->execute();
-        return $stmt->fetch();
+    }
 
+    static public function addUserM($dbTable, $regData){
+        $sql = "INSERT INTO $dbTable (user, password, id_access_level, name, email, phone_number) VALUES (:user, :password, :id_access_level, :name, :email, :phone_number)";
+        $pdo = Config::cnx()->prepare($sql);
+        $pdo->bindParam(":user", $regData["user"], PDO::PARAM_STR);
+        $pdo->bindParam(":password", password_hash($regData["password"], PASSWORD_DEFAULT), PDO::PARAM_STR);
+        $pdo->bindParam(":id_access_level", $regData["access_level"], PDO::PARAM_INT);
+        $pdo->bindParam(":name", $regData["name"], PDO::PARAM_STR);
+        $pdo->bindParam(":email", $regData["email"], PDO::PARAM_STR);
+        $pdo->bindParam(":phone_number", $regData["phone_number"], PDO::PARAM_STR);
 
+        if($pdo->execute()){
+            return 1;
+        }else{
+            return "error";
+        }
+        $pdo->close();
     }
 }
 
