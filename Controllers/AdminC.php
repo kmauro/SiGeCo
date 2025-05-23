@@ -14,6 +14,7 @@ class AdminController{
                     session_start();
                     $_SESSION["logged"] = true;
                     $_SESSION["access_level"] = $answer["id_access_level"];
+                    $_SESSION["user"] = $answer["user"];
                     header("location:index.php?route=dashboard");
             }else{
                 echo $answer;

@@ -1,7 +1,8 @@
 <?php
 require_once "config.php";
 class AdminModel{
-    static public function logInM($dataC, $dbTable){
+
+    public static function logInM($dataC, $dbTable){
         $sql = "SELECT user, password AS contra, id_access_level FROM $dbTable WHERE user = :usuario";
         $pdo = Config::cnx()->prepare($sql);
         $pdo->bindParam(":usuario", $dataC["user"], PDO::PARAM_STR);
@@ -20,7 +21,7 @@ class AdminModel{
 
     }
 
-    static public function addUserM($dbTable, $regData){
+    public static function addUserM($dbTable, $regData){
         $sql = "INSERT INTO $dbTable (user, password, id_access_level, name, email, phone_number) VALUES (:user, :password, :id_access_level, :name, :email, :phone_number)";
         $pdo = Config::cnx()->prepare($sql);
         $pdo->bindParam(":user", $regData["user"], PDO::PARAM_STR);
@@ -37,6 +38,7 @@ class AdminModel{
         }
         $pdo->close();
     }
+    
 }
 
 ?>

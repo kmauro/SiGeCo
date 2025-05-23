@@ -1,6 +1,7 @@
 <?php
 
 class RouteController{
+
     public function template(){
         include "Views/template.php";
     }
@@ -8,7 +9,6 @@ class RouteController{
     public function login(){
         include "Views/login.php";
     }
-
 
     public function routes(){
 

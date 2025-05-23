@@ -28,3 +28,5 @@ if (!empty($_GET['type'])) {
         echo json_encode(['error' => 'Error en la consulta']);
     }
 }
+
+?>

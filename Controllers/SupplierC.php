@@ -1,6 +1,7 @@
 <?php 
 
 class SupplierController{
+    
     public static function showSupplierC($dataID = null){
         
         $dbTable="suppliers";
@@ -16,7 +17,6 @@ class SupplierController{
         $answer = SupplierModel::showSupplierM($dbTable, $dataID);
         return $answer;
     }
-
 
     public static function addSupplierC(){
         if(!empty($_POST["name"])){
@@ -61,7 +61,6 @@ class SupplierController{
             echo $answer;
         }
     }
-
 
 }
 

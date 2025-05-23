@@ -2,7 +2,7 @@
 
 class SupplierModel{
 
-    static public function showSupplierM($dbTable, $dataID){
+    public static function showSupplierM($dbTable, $dataID){
         $sql = "SELECT id, name, cuit, phone_number, email, address FROM $dbTable";
         if($dataID != 0){
             $sql = $sql." WHERE id = :id";
@@ -24,8 +24,7 @@ class SupplierModel{
         $pdo->close();
     }
 
-
-    static public function addSupplierM($dbTable, $regData){
+    public static function addSupplierM($dbTable, $regData){
         $sql = "INSERT INTO $dbTable (name, cuit, phone_number, email, address) VALUES (:name, :cuit, :phone_number, :email, :address)";
         $pdo = Config::cnx()->prepare($sql);
         $pdo->bindParam(":name", $regData["name"], PDO::PARAM_STR);
@@ -61,7 +60,6 @@ class SupplierModel{
 
         $pdo->close();
     }
-
 
     public static function deleteSupplierM($dbTable, $dataID){
         $sql = "DELETE FROM supplier_product WHERE id_supplier = :id";

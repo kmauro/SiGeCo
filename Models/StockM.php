@@ -39,6 +39,15 @@ class StockModel{
         $pdo->close();
     }
 
+    public static function showQuantityM($dbTable){
+        $sql = "SELECT products.id, products.name, quantity, desired_quantity FROM $dbTable";
+        $pdo = Config::cnx()->prepare($sql);
+        $pdo->execute();
+        return $pdo->fetchAll(PDO::FETCH_ASSOC);
+        $pdo->close();
+        
+    }
+
     public static function showProductSuppliersM($dbTable, $dataID){
         $sql = "SELECT suppliers.* FROM suppliers INNER JOIN supplier_product ON suppliers.id = supplier_product.id_supplier WHERE supplier_product.id_product = :id;";
         $pdo = Config::cnx()->prepare($sql);
@@ -48,8 +57,6 @@ class StockModel{
         return $suppliers;
         $pdo->close();
     }
-
-
 
     public static function addProductM($dbTable, $regData, $suppliers){
         try {
@@ -142,7 +149,20 @@ class StockModel{
         }
     }
 
+    public static function updateQuantityM($dbTable, $regData){
+        try {
+            $pdo = Config::cnx();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
+            // Actualizar cantidad
+            $stmt = $pdo->prepare("UPDATE $dbTable SET quantity = ? WHERE id = ?");
+            $stmt->execute([$regData["quantity"], $regData["id"]]);
+    
+            return 1;
+        } catch (PDOException $e) {
+            echo "Error al actualizar cantidad: " . $e->getMessage();
+        }
+    }
 
 
 }

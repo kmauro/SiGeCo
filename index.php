@@ -22,3 +22,7 @@ if(empty($_SESSION["logged"])){
 }
 ?>
 
+<body style="background-color:#343a40;">
+    
+</body>
+

@@ -2,9 +2,6 @@
 
 class StockController{
 
-
-
-
     public function showStockC(){
         $dataID = null;
         $dbTable = "products";
@@ -56,8 +53,6 @@ class StockController{
         }
 
     }
-
-
 
     public function addProductC(){
         $dbTable = "products";
@@ -111,6 +106,34 @@ class StockController{
         }
     }
 
+    public function showQuantityC(){
+        $dataID = null;
+        $dbTable = "products";
+        $answer = StockModel::showQuantityM($dbTable, $dataID);
+        foreach($answer as $key => $value){
+            echo '<tr> <td>'.$value["name"].'</td>
+                    <td>'.$value["quantity"].'</td>
+                    <td> <input type="text" class="form-control" id="quantity" name="quantity" autocomplete=off placeholder="999"> </td>
+                    <td>'.$value["desired_quantity"].'</td>
+                </tr>';
+        }
+    }
+
+    public function updateQuantityC(){
+        $dbTable = "products";
+        if (empty($_POST['quantity'])) {
+            die("Todos los campos son obligatorios");
+        }else{
+            $regData = array("id"=>$_POST['id'], "lastQuantity"=>$_POST["lastQuantity"],"quantity"=>$_POST['quantity']);
+            $answer = StockModel::updateQuantityM($dbTable, $regData);
+
+            if($answer == 1){
+                header("location:index.php?route=stock");
+            }else{
+                echo "error";
+            }
+        }
+    }
     
 }
 
