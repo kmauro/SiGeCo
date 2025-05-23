@@ -51,8 +51,9 @@ body {
     
 }
 
+
 main {
-    margin-left: 60px; /* Ajuste cuando el menú está colapsado */
+    margin-left: 250px; /* Ajuste cuando el menú está colapsado */
     padding: 20px;
     transition: margin-left 0.3s ease;
     width: 100%;

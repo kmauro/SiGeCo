@@ -19,7 +19,7 @@
         <?php include "modules/navbar.php"; ?>
     </section>
 
-    <main id="main-content">
+    <main id="main-content" style="margin-left:250px;">
       <div>
         <?php 
 
@@ -34,15 +34,22 @@
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('toggleBtn');
         const mainContent = document.getElementById('main-content');
+        const dropdownToggle = document.querySelector(".dropdown-toggle");
+        const dropdownMenu = document.getElementById('.dropdown-menu');
 
         toggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('expanded');
 
             // Ajustar el margen izquierdo del contenido
             if (sidebar.classList.contains('expanded')) {
+                dropdownToggle.setAttribute("data-bs-toggle", "dropdown");
+                dropdownToggle.classList.add("dropdown-toggle");
                 mainContent.style.marginLeft = "250px"; // Expande el contenido
             } else {
                 mainContent.style.marginLeft = "60px"; // Contrae el contenido
+                dropdownToggle.removeAttribute("data-bs-toggle");
+              dropdownToggle.classList.remove("dropdown-toggle");
+              dropdownMenu.classList.remove("show");
             }
         });
     </script>
