@@ -14,7 +14,7 @@
                 <a href="index.php?route=suppliers" class="menu-item"><i class="bi bi-person-lines-fill"></i> <span class="menu-text">Proveedores</span></a>
             </li>
             <li class="nav-item">
-                <a href="index.php?route=register" class="menu-item"><i class="bi bi-person-plus"></i> <span class="menu-text">Registro</span></a>
+                <a href="index.php?route=user" class="menu-item"><i class="bi bi-person-plus"></i> <span class="menu-text">Registro</span></a>
             </li>
             <li class="nav-item">
                 <a href="" class="menu-item"><i class=""></i> <span class="menu-text"></span></a>
@@ -27,7 +27,8 @@
             </a> 
             <ul class="dropdown-menu text-small shadow" id="dropdown-menu"> 
                 <li><a class="dropdown-item" href="#">Ajustes</a></li> 
-                <li><a class="dropdown-item" href="#">Perfil</a></li> 
+                <li><a class="dropdown-item" href="index.php?route=users">Lista usuarios</a></li> 
+                <li><a class="dropdown-item" href="index.php?route=user&id=<?php echo $_SESSION["id"]; ?>">Perfil</a></li> 
                 <li><hr class="dropdown-divider"></li> 
                 <li><a class="dropdown-item" href="index.php?route=exit">Cerrar Sesion</a></li> 
             </ul> 

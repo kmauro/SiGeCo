@@ -15,6 +15,7 @@ class AdminController{
                     $_SESSION["logged"] = true;
                     $_SESSION["access_level"] = $answer["id_access_level"];
                     $_SESSION["user"] = $answer["user"];
+                    $_SESSION["id"] = $answer["id"];
                     header("location:index.php?route=dashboard");
             }else{
                 echo $answer;
@@ -41,6 +42,58 @@ class AdminController{
             }else{
                 echo "error";
             }
+        }
+    }
+
+    public function showUsersC(){
+        $dbTable = "users";
+        $answer = AdminModel::showUsersM($dbTable);
+        foreach($answer as $value){
+            echo '<tr>';
+            echo '<td>'.$value["user"].'</td>';
+            echo '<td>'.$value["name"].'</td>';
+            echo '<td>'.$value["access_level"].'</td>';
+            echo '<td>'.$value["phone_number"].'</td>';
+            echo '<td>'.$value["email"].'</td>';
+            echo '<td><a href="index.php?route=user&id='.$value["id"].'"<button>Editar    </button></a>';
+            
+            if($_SESSION["user"] != $value["user"]){   
+                echo '<a href="index.php?route=deleteUser&id='.$value["id"].'"<button>Eliminar</button></a>';
+            }
+            echo '</td>';
+            echo '</tr>';
+        }
+        
+
+        
+    }
+
+    public function showUserC($dataID){
+        $dbTable = "users";
+        $answer = AdminModel::showUserM($dbTable, $dataID);
+        return $answer;
+    }
+
+    public function editUserC($dataID){
+        if(!empty($_POST["user"]) && !empty($dataID)){
+            $dbTable = "users";
+            $regData = array("user"=>$_POST["user"], "name"=>$_POST["name"], "email"=>$_POST["email"], "phone_number"=>$_POST["phone"], "id"=>$dataID);
+            $answer = AdminModel::editUserM($dbTable, $regData);
+            if($answer == 1){
+                header("location:index.php?route=users");
+            }else{
+                echo "error";
+            }
+        }
+    }
+
+    public function deleteUserC($dataID){
+        $dbTable = "users";
+        $answer = AdminModel::deleteUserM($dbTable, $dataID);
+        if($answer == 1){
+            header("location:index.php?route=users");
+        }else{
+            echo "error";
         }
     }
 
