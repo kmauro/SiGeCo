@@ -112,25 +112,45 @@ class StockController{
         $answer = StockModel::showQuantityM($dbTable, $dataID);
         foreach($answer as $key => $value){
             echo '<tr> <td>'.$value["name"].'</td>
-                    <td>'.$value["quantity"].'</td>
-                    <td> <input type="text" class="form-control" id="quantity" name="quantity" autocomplete=off placeholder="999"> </td>
-                    <td>'.$value["desired_quantity"].'</td>
-                </tr>';
+                        <td>'.$value["quantity"].'</td>
+                        <input type="hidden" name="id[]" value="'.$value["id"].'"> 
+                        <input type="hidden" name="lastQuantity[]" value="'.$value["quantity"].'"> 
+                        <td> <input type="text" name="quantity[]" class="form-control" autocomplete="off" placeholder="999"> </td>
+                        <td>'.$value["desired_quantity"].'</td>
+                    </tr>';
+
         }
     }
 
     public function updateQuantityC(){
         $dbTable = "products";
-        if (empty($_POST['quantity'])) {
+        if(empty($_POST['quantity']) || empty($_POST['id']) || empty($_POST['lastQuantity'])){
             die("Todos los campos son obligatorios");
         }else{
-            $regData = array("id"=>$_POST['id'], "lastQuantity"=>$_POST["lastQuantity"],"quantity"=>$_POST['quantity']);
-            $answer = StockModel::updateQuantityM($dbTable, $regData);
+            $ids = $_POST['id'];
+            $lastQuantities = $_POST['lastQuantity'];
+            $newQuantities = $_POST['quantity'];
 
-            if($answer == 1){
-                header("location:index.php?route=stock");
-            }else{
-                echo "error";
+            $regData = [];
+
+            for ($i = 0; $i < count($ids); $i++) {
+                $id = intval($ids[$i]);
+                $last = intval($lastQuantities[$i]);
+                $new = intval($newQuantities[$i]);
+                if ($new !== $last) {
+                    $regData[] = [
+                        'id' => $id,
+                        'quantity' => $new
+                    ];
+                }
+            }
+            if (!empty($regData)) {
+                $answer = StockModel::updateQuantityM($dbTable, $regData);
+                if ($answer == 1) {
+                    header("location:index.php?route=stock");
+                } else {
+                    echo "error";
+                }
             }
         }
     }

@@ -3,8 +3,13 @@
     $controller = new StockController();
 
     // Handle form submission BEFORE any output
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isEditing) {
-        $controller->editProductC($_GET["id"]);
+    
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($isEditing) {
+            $controller->editProductC($_GET["id"]);
+        } else {
+            $controller->addProductC();
+        }
         exit; // Stop further output after redirect
     }
 
@@ -77,7 +82,7 @@
                 <div id="suppliers" name="suppliers" class="product-list">
                     <div class="row">
                         <?php
-                        foreach($suppliersList as $supplier) {
+                       /* foreach($suppliersList as $supplier) {
                             $checked = '';
                             if ($isEditing) {
                                 foreach ($suppliersChecked as $supplierChecked) {
@@ -88,7 +93,7 @@
                                 }
                             }
                             echo '<div class="col-4"><input type="checkbox" name="suppliers[]" value="' . htmlspecialchars($supplier["id"]) . '" ' . $checked . '>' . htmlspecialchars($supplier["name"]) . '</div>';
-                        }
+                        }*/
                         ?>
                     </div>
                 </div>
@@ -102,4 +107,4 @@
         </form>
     </div>
 </div>
-<?php echo !$isEditing ? '<script src="Views/assets/js/get_data.js"> </script>' : null; ?>
+<?php echo  '<script src="Views/assets/js/get_data.js"> </script>' ; ?>

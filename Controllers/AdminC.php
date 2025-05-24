@@ -35,7 +35,7 @@ class AdminController{
     public function addUserC(){
         if(!empty($_POST["user"]) && !empty($_POST["password"]) && !empty($_POST["accessLevel"])){
             $dbTable = "users";
-            $regData = array("user"=>$_POST["user"], "password"=>$_POST["password"], "access_level"=>$_POST["accessLevel"], "name"=>$_POST["address"], "email"=>$_POST["email"], "phone_number"=>$_POST["phone"]);
+            $regData = array("user"=>$_POST["user"], "password"=>$_POST["password"], "access_level"=>$_POST["accessLevel"], "name"=>$_POST["name"], "email"=>$_POST["email"], "phone_number"=>$_POST["phone"]);
             $answer = AdminModel::addUserM($dbTable, $regData);
             if($answer == 1){
                 header("location:index.php?route=users");
@@ -75,14 +75,21 @@ class AdminController{
     }
 
     public function editUserC($dataID){
-        if(!empty($_POST["user"]) && !empty($dataID)){
+        if(!empty($dataID)){
             $dbTable = "users";
-            $regData = array("user"=>$_POST["user"], "name"=>$_POST["name"], "email"=>$_POST["email"], "phone_number"=>$_POST["phone"], "id"=>$dataID);
+            $regData = array(
+                "name"=>$_POST["name"],
+                "email"=>$_POST["email"],
+                "phone_number"=>$_POST["phone"],
+                "id"=>$dataID,
+                "access_level"=>$_POST["accessLevel"]
+            );
             $answer = AdminModel::editUserM($dbTable, $regData);
             if($answer == 1){
                 header("location:index.php?route=users");
             }else{
                 echo "error";
+                header("location:index.php?route=dashboard");
             }
         }
     }
@@ -97,6 +104,25 @@ class AdminController{
         }
     }
 
+    public function changePasswordC(){
+        if(!empty($_POST["password"]) && !empty($_POST["newPassword"]) && !empty($_POST["confirmPassword"])){
+            $dbTable = "users";
+            $regData = array("password"=>$_POST["password"], "newPassword"=>$_POST["newPassword"], "confirmPassword"=>$_POST["confirmPassword"], "id"=>$_SESSION["id"]);
+            $answer = AdminModel::changePasswordM($dbTable, $regData);
+            if($answer == 1){
+                header("location:index.php?route=dashboard");
+            }else{
+                echo $answer;
+            }
+        }
+    }
+
+
+    public function getAccessLevelC(){
+        $dbTable = "access_levels";
+        $answer = AdminModel::getAccessLevelM($dbTable);
+        return $answer;
+    }
 }
 
 ?>

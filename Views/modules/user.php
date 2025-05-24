@@ -1,19 +1,18 @@
-
-
 <?php
-    //editar los controladores para que se ejecuten en AdminC para 
-    // desarrollar el editado y borrado de los usuarios.
-    // tambien editar el array de los htmlspecialchars dentro de los inputs
-
     $isEditing = !empty($_GET["id"]);
     $controller = new AdminController();
 
     // Handle form submission BEFORE any output
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isEditing) {
-        $controller->editUserC($_GET["id"]);
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($isEditing) {
+            $controller->editUserC($_GET["id"]);
+        } else {
+            $controller->addUserC();
+        }
         exit; // Stop further output after redirect
     }
 
+    $accessCombo = $_SESSION["access_level"]==1 ? $controller->getAccessLevelC() : null;
     $userData = $isEditing ? $controller->showUserC($_GET["id"]) : null;
     
 
@@ -26,23 +25,31 @@
         <div class  = "col-1"></div>
         <div class="col-4">
             <form class="row g-3" method="POST" id="userForm">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label for="user" class="form-label">Usuario</label>
-                    <input type="text" <?php $isEditing ?  "disabled" : null; ?> class="form-control" id="user" name="user" autocomplete=off placeholder="Usuario" value="<?= $isEditing ? htmlspecialchars($userData["user"]) : '' ?>">
+                    <input type="text" <?php if($isEditing){echo "disabled";}?> class="form-control" id="user" name="user" autocomplete=off placeholder="Usuario" value="<?= $isEditing ? htmlspecialchars($userData["user"]) : '' ?>">
                 </div>
                 
                 <?php 
-                    if(!$isEditing){
-                        echo '<div class="col-md-4">
+                    if(!$isEditing || $_SESSION["access_level"] == 1){
+                        echo '<div class="col-md-6">
                                 <label for="accessLevel" class="form-label">Nivel de acceso</label>
-                                <input type="number" class="form-control" id="accessLevel" name="accessLevel" autocomplete=off placeholder="999">
-                                </div>';
+                                <select id="accessLevel" name="accessLevel" class="form-select">';
+                        foreach($accessCombo as $value){
+                            echo '<option value="'.$value["id"].'">'.$value["access_level"].'</option>';
+                        }        
+                        echo '</select> </div>';
+                        
                     }else{
-                        echo '<a href="index.php?changePassword&id='.$_GET["id"].'">Cambiar contraseña TODO</a>';
+                        echo '<a href="index.php?route=changePassword&id='.$_GET["id"].'">Cambiar contraseña</a>';
                     }
-                
+                    if(!$isEditing){
+                        echo '<div class="col-12">
+                                <label for="password" class="form-label">Contraseña</label>
+                                <input type="password" class="form-control" id="password" name="password" autocomplete=off placeholder="Contraseña">
+                            </div>';
+                    }
                 ?>
-                
                 <div class="col-md-6">
                     <label for="name" class="form-label">Nombre</label>
                     <input type="text" class="form-control" id="name" name="name" placeholder="Nombre y Apellido" value="<?= $isEditing ? htmlspecialchars($userData['name']) : '' ?>">
@@ -71,15 +78,4 @@
             </form>
         </div>
     </div>
-    
-
-
-
-        
-    <?php
-    
-        $controller = new AdminController();
-        $controller->addUserC();
-    
-    ?>
 

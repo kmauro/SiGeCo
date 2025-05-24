@@ -10,6 +10,8 @@
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isEditing) {
         $controller->editSupplierC($_GET["id"]);
         exit; // Stop further output after redirect
+    }else{
+        $controller->addSupplierC();
     }
 
     $supplierData = $isEditing ? $controller->showSupplierC($_GET["id"]) : null;
@@ -75,8 +77,7 @@
         
     <?php
     
-        $controller = new SupplierController();
-        $controller->addSupplierC();
+        
     
     ?>
 

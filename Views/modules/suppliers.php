@@ -48,7 +48,7 @@
 							<td>'.$value["email"].'</td>
 							<td>'.$value["address"].'</td>
 							<td><a href="index.php?route=supplier&id='.$value["id"].'"<button>Editar</button></a></td>
-							<td><a href="index.php?route=supplier&id='.$value["id"].'"<button>Borrar</button></a></td>
+							<td><a href="index.php?route=deleteSupplier&id='.$value["id"].'"<button>Borrar</button></a></td>
 							
 					</tr>';
 				}

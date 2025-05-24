@@ -156,7 +156,10 @@ class StockModel{
     
             // Actualizar cantidad
             $stmt = $pdo->prepare("UPDATE $dbTable SET quantity = ? WHERE id = ?");
-            $stmt->execute([$regData["quantity"], $regData["id"]]);
+            foreach($regData as $key=>$value){
+                $stmt->execute([$value["quantity"], $value["id"]]);
+            }
+            
     
             return 1;
         } catch (PDOException $e) {
