@@ -1,5 +1,5 @@
 <?php
-require_once "config.php";
+include_once "Config.php";
 class AdminModel{
 
     public static function logInM($dataC, $dbTable){
@@ -57,6 +57,14 @@ class AdminModel{
         $pdo->close();
     }
 
+    public static function getAccessLevelM($dbTable){
+        $sql = "SELECT * FROM $dbTable";
+        $pdo = Config::cnx()->prepare($sql);
+        $pdo->execute();
+        return $pdo->fetchAll();
+        $pdo->close();
+    }
+
     public static function editUserM($dbTable, $regData){
         $sql = "UPDATE $dbTable SET name = :name, email = :email, phone_number = :phone_number, id_access_level = :access_level WHERE id = :id";
         $pdo = Config::cnx()->prepare($sql);
@@ -66,18 +74,6 @@ class AdminModel{
         $pdo->bindParam(":id", $regData["id"], PDO::PARAM_INT);
         $pdo->bindParam(":access_level", $regData["access_level"], PDO::PARAM_INT);
 
-        if($pdo->execute()){
-            return 1;
-        }else{
-            return "error";
-        }
-        $pdo->close();
-    }
-
-    public static function deleteUserM($dbTable, $dataID){
-        $sql = "DELETE FROM $dbTable WHERE id = :id";
-        $pdo = Config::cnx()->prepare($sql);
-        $pdo->bindParam(":id", $dataID, PDO::PARAM_INT);
         if($pdo->execute()){
             return 1;
         }else{
@@ -113,14 +109,18 @@ class AdminModel{
         
     }
 
-    public static function getAccessLevelM($dbTable){
-        $sql = "SELECT * FROM $dbTable";
+    public static function deleteUserM($dbTable, $dataID){
+        $sql = "DELETE FROM $dbTable WHERE id = :id";
         $pdo = Config::cnx()->prepare($sql);
-        $pdo->execute();
-        return $pdo->fetchAll();
+        $pdo->bindParam(":id", $dataID, PDO::PARAM_INT);
+        if($pdo->execute()){
+            return 1;
+        }else{
+            return "error";
+        }
         $pdo->close();
     }
-    
+
 }
 
 ?>

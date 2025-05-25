@@ -1,7 +1,5 @@
 <?php
-
-require_once "config.php";
-
+include_once "Config.php";
 class StockModel{
 
     public static function showStockM($dbTable, $dataID = null){
@@ -39,6 +37,16 @@ class StockModel{
         $pdo->close();
     }
 
+    public static function showProductSuppliersM($dbTable, $dataID){
+        $sql = "SELECT suppliers.* FROM suppliers INNER JOIN supplier_product ON suppliers.id = supplier_product.id_supplier WHERE supplier_product.id_product = :id;";
+        $pdo = Config::cnx()->prepare($sql);
+        $pdo->bindParam(":id", $dataID, PDO::PARAM_INT);
+        $pdo->execute();
+        $suppliers = $pdo->fetchAll(PDO::FETCH_ASSOC);
+        return $suppliers;
+        $pdo->close();
+    }
+
     public static function showQuantityM($dbTable){
         $sql = "SELECT products.id, products.name, quantity, desired_quantity FROM $dbTable";
         $pdo = Config::cnx()->prepare($sql);
@@ -48,13 +56,20 @@ class StockModel{
         
     }
 
-    public static function showProductSuppliersM($dbTable, $dataID){
-        $sql = "SELECT suppliers.* FROM suppliers INNER JOIN supplier_product ON suppliers.id = supplier_product.id_supplier WHERE supplier_product.id_product = :id;";
+    public static function showCategoriesM($dbTable){
+        $sql = "SELECT * FROM $dbTable";
+        $pdo = Config::cnx()->prepare($sql);
+        $pdo->execute();
+        return $pdo->fetchAll(PDO::FETCH_ASSOC);
+        $pdo->close();
+    }
+
+    public static function showSubcategoriesM($dbTable, $dataID){
+        $sql = "SELECT id, subcategory FROM $dbTable WHERE id_category = :id";
         $pdo = Config::cnx()->prepare($sql);
         $pdo->bindParam(":id", $dataID, PDO::PARAM_INT);
         $pdo->execute();
-        $suppliers = $pdo->fetchAll(PDO::FETCH_ASSOC);
-        return $suppliers;
+        return $pdo->fetchAll(PDO::FETCH_ASSOC);
         $pdo->close();
     }
 
@@ -127,6 +142,24 @@ class StockModel{
         }
     }
 
+    public static function updateQuantityM($dbTable, $regData){
+        try {
+            $pdo = Config::cnx();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+            // Actualizar cantidad
+            $stmt = $pdo->prepare("UPDATE $dbTable SET quantity = ? WHERE id = ?");
+            foreach($regData as $key=>$value){
+                $stmt->execute([$value["quantity"], $value["id"]]);
+            }
+            
+    
+            return 1;
+        } catch (PDOException $e) {
+            echo "Error al actualizar cantidad: " . $e->getMessage();
+        }
+    }
+
     public static function deleteProductM($dbTable, $dataID){
         try {
             $pdo = Config::cnx();
@@ -148,25 +181,6 @@ class StockModel{
             echo "Error al eliminar producto: " . $e->getMessage();
         }
     }
-
-    public static function updateQuantityM($dbTable, $regData){
-        try {
-            $pdo = Config::cnx();
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-            // Actualizar cantidad
-            $stmt = $pdo->prepare("UPDATE $dbTable SET quantity = ? WHERE id = ?");
-            foreach($regData as $key=>$value){
-                $stmt->execute([$value["quantity"], $value["id"]]);
-            }
-            
-    
-            return 1;
-        } catch (PDOException $e) {
-            echo "Error al actualizar cantidad: " . $e->getMessage();
-        }
-    }
-
 
 }
 

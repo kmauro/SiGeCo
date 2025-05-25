@@ -14,11 +14,7 @@ if (!empty($_GET['type'])) {
         } elseif ($type == 'subcategories' && !empty($_GET['id_category'])) {
             $pdo = Config::cnx()->prepare("SELECT id, subcategory as name FROM subcategories WHERE subcategories.id_category = ?");
             $pdo->execute([$_GET['id_category']]);
-        } elseif ($type == 'suppliers') {
-            $stmt = "SELECT id, name FROM suppliers";
-            $pdo = Config::cnx()->prepare($stmt);
-            $pdo->execute();
-        } else {
+        }else {
             echo json_encode([]);
             exit;
         }
@@ -30,3 +26,4 @@ if (!empty($_GET['type'])) {
 }
 
 ?>
+

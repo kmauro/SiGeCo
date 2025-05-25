@@ -54,6 +54,34 @@ class StockController{
 
     }
 
+    public function showQuantityC(){
+        $dataID = null;
+        $dbTable = "products";
+        $answer = StockModel::showQuantityM($dbTable, $dataID);
+        foreach($answer as $key => $value){
+            echo '<tr> <td>'.$value["name"].'</td>
+                        <td>'.$value["quantity"].'</td>
+                        <input type="hidden" name="id[]" value="'.$value["id"].'"> 
+                        <input type="hidden" name="lastQuantity[]" value="'.$value["quantity"].'"> 
+                        <td> <input type="text" name="quantity[]" class="form-control" autocomplete="off" placeholder="999"> </td>
+                        <td>'.$value["desired_quantity"].'</td>
+                    </tr>';
+
+        }
+    }
+
+    public function showCategoriesC(){
+        $dbTable = "categories";
+        $answer = StockModel::showCategoriesM($dbTable);
+        return $answer;
+    }
+
+    public function showSubcategoriesC($dataID){
+        $dbTable = "subcategories";
+        $answer = StockModel::showSubcategoriesM($dbTable, $dataID);
+        return $answer;
+    }
+
     public function addProductC(){
         $dbTable = "products";
         if (empty($_POST['suppliers']) || empty($_POST['name']) || empty($_POST['subcategory']) || empty($_POST['cost']) || empty($_POST['price']) || empty($_POST['quantity']) || empty($_POST['d_quantity']) || empty($_POST['suppliers'])) {
@@ -95,33 +123,6 @@ class StockController{
         }
     }
 
-    public function deleteProductC($dataID){
-        $dbTable = "products";
-        $answer = StockModel::deleteProductM($dbTable, $dataID);
-
-        if($answer == 1){
-            header("location:index.php?route=stock");
-        }else{
-            echo "error";
-        }
-    }
-
-    public function showQuantityC(){
-        $dataID = null;
-        $dbTable = "products";
-        $answer = StockModel::showQuantityM($dbTable, $dataID);
-        foreach($answer as $key => $value){
-            echo '<tr> <td>'.$value["name"].'</td>
-                        <td>'.$value["quantity"].'</td>
-                        <input type="hidden" name="id[]" value="'.$value["id"].'"> 
-                        <input type="hidden" name="lastQuantity[]" value="'.$value["quantity"].'"> 
-                        <td> <input type="text" name="quantity[]" class="form-control" autocomplete="off" placeholder="999"> </td>
-                        <td>'.$value["desired_quantity"].'</td>
-                    </tr>';
-
-        }
-    }
-
     public function updateQuantityC(){
         $dbTable = "products";
         if(empty($_POST['quantity']) || empty($_POST['id']) || empty($_POST['lastQuantity'])){
@@ -154,7 +155,18 @@ class StockController{
             }
         }
     }
-    
+
+    public function deleteProductC($dataID){
+        $dbTable = "products";
+        $answer = StockModel::deleteProductM($dbTable, $dataID);
+
+        if($answer == 1){
+            header("location:index.php?route=stock");
+        }else{
+            echo "error";
+        }
+    }
+        
 }
 
 ?>

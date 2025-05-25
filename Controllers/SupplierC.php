@@ -2,22 +2,6 @@
 
 class SupplierController{
     
-    public static function showSupplierC($dataID = null){
-        
-        $dbTable="suppliers";
-        if($dataID == null){
-            $dataID = 0;
-        }else{
-            if(!empty($_GET["id"])){
-                $dataID = $_GET["id"];
-            }else{
-                $dataID = 0;
-            }
-        }
-        $answer = SupplierModel::showSupplierM($dbTable, $dataID);
-        return $answer;
-    }
-
     public static function addSupplierC(){
         if(!empty($_POST["name"])){
             $dbTable = "suppliers";
@@ -33,6 +17,22 @@ class SupplierController{
                 echo $answer;
             }
         }
+    }
+
+    public static function showSupplierC($dataID = null){
+        
+        $dbTable="suppliers";
+        if($dataID == null){
+            $dataID = 0;
+        }else{
+            if(!empty($_GET["id"])){
+                $dataID = $_GET["id"];
+            }else{
+                $dataID = 0;
+            }
+        }
+        $answer = SupplierModel::showSupplierM($dbTable, $dataID);
+        return $answer;
     }
 
     public static function editSupplierC($dataID){

@@ -1,22 +1,23 @@
-
-
 <?php
-    
-
+    // Chequeo si esta editanto o agregando un proveedor
     $isEditing = !empty($_GET["id"]);
     $controller = new SupplierController();
 
-    // Handle form submission BEFORE any output
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isEditing) {
-        $controller->editSupplierC($_GET["id"]);
-        exit; // Stop further output after redirect
-    }else{
-        $controller->addSupplierC();
+    // manejo de la peticion POST antes de cualquier salida
+    // Si se recibe una peticion POST, se llama al controlador correspondiente
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($isEditing) {
+            $controller->editSupplierC($_GET["id"]);
+        } else {
+            $controller->addSupplierC();
+        }
+        exit; 
     }
-
+    // Si no se recibe una peticion POST, se carga el formulario
+    // Se obtiene la info de proveedores si se esta editando
     $supplierData = $isEditing ? $controller->showSupplierC($_GET["id"]) : null;
     
-
+    //En caso de que no se encuentre el proveedor, se muestra un mensaje de error
     if ($isEditing && !$supplierData) {
         echo '<h1>Error: Proveedor no encontrado.</h1>';
         exit;
@@ -25,7 +26,7 @@
     echo $isEditing ? '<div class = "row"><h1 class="col-3">Editar Proveedor</h1><a class = "col-1" href="index.php?route=deleteSupplier&id='.$_GET["id"].'"><button type="button" class="btn btn-danger">Borrar</button></a> </div>' : '<h1>Agregar Proveedor</h1>';
 ?>
     
-
+<!-- Formulario de proveedor -->
 	<div class="row">
         <div class  = "col-1"></div>
         <div class="col-4">
@@ -57,27 +58,8 @@
 
 
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary">
-                        <?php 
-                            if(empty($_GET["id"])){
-                                echo "Agregar";
-                            }else{
-                                echo "Editar";
-                            }
-                        ?>
-                    </button>
+                    <button type="submit" class="btn btn-primary"><?= $isEditing ? 'Editar' : 'Agregar' ?></button>
                 </div>
             </form>
         </div>
     </div>
-    
-
-
-
-        
-    <?php
-    
-        
-    
-    ?>
-

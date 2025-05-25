@@ -74,6 +74,12 @@ class AdminController{
         return $answer;
     }
 
+    public function getAccessLevelC(){
+        $dbTable = "access_levels";
+        $answer = AdminModel::getAccessLevelM($dbTable);
+        return $answer;
+    }
+
     public function editUserC($dataID){
         if(!empty($dataID)){
             $dbTable = "users";
@@ -94,16 +100,6 @@ class AdminController{
         }
     }
 
-    public function deleteUserC($dataID){
-        $dbTable = "users";
-        $answer = AdminModel::deleteUserM($dbTable, $dataID);
-        if($answer == 1){
-            header("location:index.php?route=users");
-        }else{
-            echo "error";
-        }
-    }
-
     public function changePasswordC(){
         if(!empty($_POST["password"]) && !empty($_POST["newPassword"]) && !empty($_POST["confirmPassword"])){
             $dbTable = "users";
@@ -117,12 +113,16 @@ class AdminController{
         }
     }
 
-
-    public function getAccessLevelC(){
-        $dbTable = "access_levels";
-        $answer = AdminModel::getAccessLevelM($dbTable);
-        return $answer;
+    public function deleteUserC($dataID){
+        $dbTable = "users";
+        $answer = AdminModel::deleteUserM($dbTable, $dataID);
+        if($answer == 1){
+            header("location:index.php?route=users");
+        }else{
+            echo "error";
+        }
     }
+    
 }
 
 ?>

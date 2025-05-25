@@ -1,19 +1,29 @@
 <?php
+    // Chequeo si esta editanto o agregando un usuario
     $isEditing = !empty($_GET["id"]);
     $controller = new AdminController();
 
-    // Handle form submission BEFORE any output
+    // manejo de la peticion POST antes de cualquier salida
+    // Si se recibe una peticion POST, se llama al controlador correspondiente
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($isEditing) {
             $controller->editUserC($_GET["id"]);
         } else {
             $controller->addUserC();
         }
-        exit; // Stop further output after redirect
+        exit; 
     }
 
+    //Si el usuario tiene permisos de admin, se carga el combo de niveles de acceso
     $accessCombo = $_SESSION["access_level"]==1 ? $controller->getAccessLevelC() : null;
+    //Si estoy editando un usuario, se carga la info del mismo
     $userData = $isEditing ? $controller->showUserC($_GET["id"]) : null;
+
+    //En caso de que no se encuentre el usuario, se muestra un mensaje de error
+    if ($isEditing && !$userData) {
+        echo '<h1>Error: Usuario no encontrado.</h1>';
+        exit;
+    }
     
 
 
@@ -27,10 +37,11 @@
             <form class="row g-3" method="POST" id="userForm">
                 <div class="col-md-6">
                     <label for="user" class="form-label">Usuario</label>
-                    <input type="text" <?php if($isEditing){echo "disabled";}?> class="form-control" id="user" name="user" autocomplete=off placeholder="Usuario" value="<?= $isEditing ? htmlspecialchars($userData["user"]) : '' ?>">
+                    <input type="text" <?= $isEditing ? "disabled" : "" ?> class="form-control" id="user" name="user" autocomplete=off placeholder="Usuario" value="<?= $isEditing ? htmlspecialchars($userData["user"]) : '' ?>">
                 </div>
                 
                 <?php 
+                //Para agregar un usuario, o editar usuario con permisos de admin, se muestra el combo de niveles de acceso
                     if(!$isEditing || $_SESSION["access_level"] == 1){
                         echo '<div class="col-md-6">
                                 <label for="accessLevel" class="form-label">Nivel de acceso</label>
@@ -40,14 +51,16 @@
                         }        
                         echo '</select> </div>';
                         
-                    }else{
-                        echo '<a href="index.php?route=changePassword&id='.$_GET["id"].'">Cambiar contraseña</a>';
                     }
+                    //En caso de que no este editando, se muestra el campo de contraseña
+                    //En caso de que este editando, se muestra un link para cambiar la contraseña
                     if(!$isEditing){
                         echo '<div class="col-12">
                                 <label for="password" class="form-label">Contraseña</label>
                                 <input type="password" class="form-control" id="password" name="password" autocomplete=off placeholder="Contraseña">
                             </div>';
+                    }else{
+                        echo '<a href="index.php?route=changePassword&id='.$_GET["id"].'">Cambiar contraseña</a>';
                     }
                 ?>
                 <div class="col-md-6">
@@ -65,15 +78,7 @@
 
 
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary">
-                        <?php 
-                            if(empty($_GET["id"])){
-                                echo "Agregar";
-                            }else{
-                                echo "Editar";
-                            }
-                        ?>
-                    </button>
+                    <button type="submit" class="btn btn-primary"><?= $isEditing ? 'Editar' : 'Agregar' ?></button>
                 </div>
             </form>
         </div>

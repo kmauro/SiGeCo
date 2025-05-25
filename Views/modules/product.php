@@ -1,24 +1,33 @@
 <?php
+    //Chequeo si esta editanto o agregando un producto
     $isEditing = !empty($_GET["id"]);
     $controller = new StockController();
 
-    // Handle form submission BEFORE any output
-    
+    // manejo de la peticion POST antes de cualquier salida
+    // Si se recibe una peticion POST, se llama al controlador correspondiente
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($isEditing) {
             $controller->editProductC($_GET["id"]);
         } else {
             $controller->addProductC();
         }
-        exit; // Stop further output after redirect
+        exit; 
     }
 
+    // Si estoy editando un producto, se carga la info del mismo
+    // Y se obtiene la info de proveedores del producto
     $productData = $isEditing ? $controller->showProductC($_GET["id"]) : null;
     $product = $productData["product"] ?? null;
     $suppliersChecked = $productData["suppliers"] ?? null;
+    //Consigo el resto de proveedores que no son del producto
     $sController = new SupplierController();
     $suppliersList = $sController->showSupplierC();
+    //Consigo las categorias y subcategorias
+    $categories = $controller->showCategoriesC();
+    $subcategories = $controller->showSubcategoriesC($product['categoryID'] ?? null);
 
+
+    //En caso de que no se encuentre el producto, se muestra un mensaje de error
     if ($isEditing && !$productData) {
         echo '<h1>Error: Producto no encontrado.</h1>';
         exit;
@@ -28,32 +37,43 @@
 ?>
 
 <div class="row">
-    <div class="col-1"></div>
+    <div class="col-1 <?= $isEditing ? "isEditing" : "" ?>" id="flag"></div>
     <div class="col-4">
         <form class="row g-3" method="POST" id="productoForm">
             <div class="col-12">
                 <label for="name" class="form-label">Nombre Producto</label>
                 <input type="text" class="form-control" id="name" name="name" autocomplete="off" placeholder="Nombre del producto" value="<?= $isEditing ? htmlspecialchars($product['name']) : '' ?>">
             </div>
-
-            <div class="col-md-6">
+            <?php if ($isEditing): ?>
+                <input type="hidden" id="categoryActual" value="<?= htmlspecialchars($product['categoryID']) ?>">
+                <input type="hidden" id="subcategoryActual" value="<?= htmlspecialchars($product['subcategoryID']) ?>">
+                
+            <?php endif; ?>
+            <?php 
+             echo '<div class="col-md-6">
                 <label for="category" class="form-label">Categoría</label>
-                <select id="category" name="category" class="form-select">
-                    <?php if ($isEditing): ?>
-                        <option value="<?= htmlspecialchars($product['categoryID']) ?>"><?= htmlspecialchars($product['category']) ?></option>
-                    <?php endif; ?>
-                </select>
+                <select id="category" name="category" class="form-select">';
+                            
+                        foreach ($categories as $category) {
+                            $selected = $isEditing && $product['categoryID'] == $category['id'] ? 'selected' : '';
+                            echo '<option value="' . htmlspecialchars($category['id']) . '" ' . $selected . '>' . htmlspecialchars($category['category']) . '</option>';
+                        }
+                    
+                echo '</select>
             </div>
-
+            
             <div class="col-md-6">
                 <label for="subcategory" class="form-label">Subcategoría</label>
-                <select id="subcategory" name="subcategory" class="form-select">
-                    <?php if ($isEditing): ?>
-                        <option value="<?= htmlspecialchars($product['subcategoryID']) ?>"><?= htmlspecialchars($product['subcategory']) ?></option>
-                    <?php endif; ?>
-                </select>
-            </div>
-
+                <select id="subcategory" name="subcategory" class="form-select">';
+                    
+                        foreach ($subcategories as $subcategory) {
+                            $selected = $isEditing && $product['subcategoryID'] == $subcategory['id'] ? 'selected' : '';
+                            echo '<option value="' . htmlspecialchars($subcategory['id']) . '" ' . $selected . '>' . htmlspecialchars($subcategory['subcategory']) . '</option>';
+                        }
+                    
+                echo '</select>
+            </div>';
+            ?>
             <div class="col-md-6">
                 <label for="cost" class="form-label">Costo</label>
                 <input type="number" class="form-control" id="cost" name="cost" placeholder="99999" value="<?= $isEditing ? htmlspecialchars($product['cost']) : '' ?>">
@@ -75,14 +95,11 @@
             </div>
 
             <div class="col-12">
-                
-
-                
                 <label for="suppliers" class="form-label">Proveedores:</label>
                 <div id="suppliers" name="suppliers" class="product-list">
-                    <div class="row">
+                    <div class="form-check">
                         <?php
-                       /* foreach($suppliersList as $supplier) {
+                        foreach($suppliersList as $supplier) {
                             $checked = '';
                             if ($isEditing) {
                                 foreach ($suppliersChecked as $supplierChecked) {
@@ -92,19 +109,17 @@
                                     }
                                 }
                             }
-                            echo '<div class="col-4"><input type="checkbox" name="suppliers[]" value="' . htmlspecialchars($supplier["id"]) . '" ' . $checked . '>' . htmlspecialchars($supplier["name"]) . '</div>';
-                        }*/
+                            echo '<input class="form-check-input" type="checkbox" id="'.htmlspecialchars($supplier["name"]).'" name="suppliers[]" '.$checked.' value="'.htmlspecialchars($supplier["id"]).'">';
+                            echo '<label class="form-check-label" for="'.htmlspecialchars($supplier["name"]).'">'.htmlspecialchars($supplier["name"]).'</label> <br>';
+                        }
                         ?>
                     </div>
                 </div>
-
-
             </div>
-
             <div class="col-12">
                 <button type="submit" class="btn btn-primary"><?= $isEditing ? 'Editar' : 'Agregar' ?></button>
             </div>
         </form>
     </div>
 </div>
-<?php echo  '<script src="Views/assets/js/get_data.js"> </script>' ; ?>
+<script src="Views/assets/js/get_data.js"> </script>
